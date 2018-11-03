@@ -820,21 +820,22 @@ extension BrowserViewController: URLBarDelegate {
     
     func urlBar(_ urlBar: URLBar, didEnterText text: String) {
         // Hide find in page if the home view is displayed
+        let trimmedText = text.trimmingCharacters(in: .whitespaces)
         let isOnHomeView = homeView != nil
-        if Settings.getToggle(.enableSearchSuggestions) && !text.isEmpty {
-            searchSuggestClient.getSuggestions(text, callback: { suggestions, error in
-                let userInputText = urlBar.userInputText ?? ""
-                if userInputText.isEmpty || userInputText != text {
+        if Settings.getToggle(.enableSearchSuggestions) && !trimmedText.isEmpty {
+            searchSuggestClient.getSuggestions(trimmedText, callback: { suggestions, error in
+                let userInputText = urlBar.userInputText?.trimmingCharacters(in: .whitespaces) ?? ""
+                if userInputText.isEmpty || userInputText != trimmedText {
                     return
                 }
                 
-                if userInputText == text {
-                    let suggestions = suggestions ?? [text]
-                    self.overlayView.setSearchQuery(queryArray: suggestions, animated: true, hideFindInPage: isOnHomeView || text.isEmpty)
+                if userInputText == trimmedText {
+                    let suggestions = suggestions ?? [trimmedText]
+                    self.overlayView.setSearchQuery(suggestions: suggestions, hideFindInPage: isOnHomeView || text.isEmpty)
                 }
             })
         } else {
-            overlayView.setSearchQuery(queryArray: [text], animated: true, hideFindInPage: isOnHomeView || text.isEmpty)
+            overlayView.setSearchQuery(suggestions: [trimmedText], hideFindInPage: isOnHomeView || text.isEmpty)
         }
     }
 
@@ -1149,7 +1150,7 @@ extension BrowserViewController: SearchSuggestionsPromptViewDelegate {
     func searchSuggestionsPromptView(_ searchSuggestionsPromptView: SearchSuggestionsPromptView, didEnable: Bool) {
         UserDefaults.standard.set(true, forKey: SearchSuggestionsPromptView.respondedToSearchSuggestionsPrompt)
         Settings.set(didEnable, forToggle: SettingsToggle.enableSearchSuggestions)
-        overlayView.displaySearchSuggestionsPrompt(hide: true)
+        overlayView.updateSearchSuggestionsPrompt(hidden: true)
         if didEnable, let urlbar = self.urlBar, let value = self.urlBar?.userInputText {
             urlBar(urlbar, didEnterText: value)
         }
