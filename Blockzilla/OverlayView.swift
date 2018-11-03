@@ -197,7 +197,7 @@ class OverlayView: UIView {
                         self.setAttributedButtonTitle(
                             phrase: self.searchSuggestions[index],
                             button: self.searchButtonGroup[index],
-                            localizedStringFormat: UIConstants.strings.searchButton
+                            localizedStringFormat: Settings.getToggle(.enableSearchSuggestions) ? "" : UIConstants.strings.searchButton
                         )
                     }
                 }
