@@ -185,7 +185,6 @@ struct UIConstants {
         static let numberOfSearchSuggestions: Int = 4
         static let progressVisibilityAnimationDuration: TimeInterval = 0.25
         static let searchButtonInset: CGFloat = 15
-        static let searchButtonAnimationDuration: TimeInterval = 0.1
         static let searchSuggestionsPromptCornerRadius: CGFloat = 12 
         static let searchSuggestionsPromptButtonRadius: CGFloat = 8
         static let toastAnimationDuration: TimeInterval = 0.3
