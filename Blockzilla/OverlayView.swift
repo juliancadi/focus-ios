@@ -15,7 +15,6 @@ protocol OverlayViewDelegate: class {
 
 class IndexedInsetButton: InsetButton {
     private var index: Int = 0
-    
     func setIndex(_ i:Int) {
         index = i
     }
@@ -187,7 +186,7 @@ class OverlayView: UIView {
                
                 self.updateSearchSuggestionsPrompt(hidden: isSearchSuggestionsPromptHidden)
                 self.topBorder.backgroundColor =  isSearchSuggestionsPromptHidden ? UIConstants.Photon.Grey90.withAlphaComponent(0.4) : UIColor(rgb: 0x42455A)
-                self.updateSearchButtons(query: self.searchQuery)
+                self.updateSearchButtons()
                 
                 let lastSearchButtonIndex = min(self.searchSuggestions.count, self.searchButtonGroup.count) - 1
                 self.updateFindInPageConstraints(
@@ -203,7 +202,7 @@ class OverlayView: UIView {
         }
     }
     
-    fileprivate func updateSearchButtons(query: String) {
+    fileprivate func updateSearchButtons() {
         for index in 0..<self.searchButtonGroup.count {
             let hasSuggestionInIndex = index < self.searchSuggestions.count;
             self.searchButtonGroup[index].isHidden = !hasSuggestionInIndex
@@ -216,8 +215,6 @@ class OverlayView: UIView {
                 )
             }
         }
-        
-        self.setAttributedButtonTitle(phrase: query, button: self.findInPageButton, localizedStringFormat: UIConstants.strings.findInPageButton)
     }
 
     fileprivate func updateFindInPageConstraints(isFindInPageHidden: Bool, lastSearchButtonIndex: Int) {
@@ -232,6 +229,8 @@ class OverlayView: UIView {
             }
             make.height.equalTo(UIConstants.layout.overlayButtonHeight)
         }
+        
+        self.setAttributedButtonTitle(phrase: self.searchQuery, button: self.findInPageButton, localizedStringFormat: UIConstants.strings.findInPageButton)
     }
 
     fileprivate func updateCopyConstraints(isCopyButtonHidden: Bool, isFindInPageHidden: Bool, lastSearchButtonIndex: Int) {

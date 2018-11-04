@@ -826,7 +826,7 @@ extension BrowserViewController: URLBarDelegate {
             searchSuggestClient.getSuggestions(trimmedText, callback: { suggestions, error in
                 let userInputText = urlBar.userInputText?.trimmingCharacters(in: .whitespaces) ?? ""
                 
-                // Return if userInputText has changed, since function was called again with the modified text
+                // Check if this callback is stale (new user input has been requested)
                 if userInputText.isEmpty || userInputText != trimmedText {
                     return
                 }
