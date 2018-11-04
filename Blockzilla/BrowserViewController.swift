@@ -819,12 +819,14 @@ extension BrowserViewController: URLBarDelegate {
     }
     
     func urlBar(_ urlBar: URLBar, didEnterText text: String) {
-        // Hide find in page if the home view is displayed
         let trimmedText = text.trimmingCharacters(in: .whitespaces)
-        let isOnHomeView = homeView != nil
+        let isOnHomeView = homeView != nil 
+
         if Settings.getToggle(.enableSearchSuggestions) && !trimmedText.isEmpty {
             searchSuggestClient.getSuggestions(trimmedText, callback: { suggestions, error in
                 let userInputText = urlBar.userInputText?.trimmingCharacters(in: .whitespaces) ?? ""
+                
+                // Return if userInputText has changed, since function was called again with the modified text
                 if userInputText.isEmpty || userInputText != trimmedText {
                     return
                 }
